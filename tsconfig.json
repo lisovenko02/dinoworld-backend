@@ -7,6 +7,6 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["node", "mongoose"]
+    "types": ["node"]
   }
 }

@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "es2015",
     "outDir": "./dist",
     "strict": true,
-    "module": "CommonJS",
+    "module": "commonjs",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["node", "express", "mongoose", "dotenv", "cors", "morgan"]
+    "moduleResolution": "Node"
   }
 }

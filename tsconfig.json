@@ -6,7 +6,7 @@
     "module": "CommonJS",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-    // "types": ["node"]
+    "emitDecoratorMetadata": true,
+    "types": ["node", "express", "mongoose", "dotenv", "cors", "morgan"]
   }
 }

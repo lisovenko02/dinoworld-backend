@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import catchAsync from '../helpers/catchAsync'
 import { AuthenticatedRequest } from '../helpers/authenticate'
 import { InventoryModel } from '../models/inventoryModel'
@@ -43,7 +43,7 @@ export const addToInventory = catchAsync(
 export const getUserInventory = catchAsync(
   async (req: Request, res: Response) => {
     const { id: userId } = req.params
-    console.log(req.query)
+
     const { page = 1 } = req.query
     const pageNumber = parseInt(page as string, 10)
     const limitNumber = 25

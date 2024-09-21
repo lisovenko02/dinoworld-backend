@@ -5,20 +5,12 @@
     "outDir": "./dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "controllers/**/*.ts",
-    "routes/**/*.ts",
-    "helpers/**/*.ts",
-    "models/**/*.ts",
-    "app.ts",
-    "server.ts"
-  ],
-
+  "include": ["**/*.ts"],
   "exclude": ["node_modules"]
 }

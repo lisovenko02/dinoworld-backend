@@ -9,8 +9,16 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["./node_modules/@types"]
+    "forceConsistentCasingInFileNames": true
   },
+  "include": [
+    "controllers/**/*.ts",
+    "routes/**/*.ts",
+    "helpers/**/*.ts",
+    "models/**/*.ts",
+    "app.ts",
+    "server.ts"
+  ],
+
   "exclude": ["node_modules"]
 }

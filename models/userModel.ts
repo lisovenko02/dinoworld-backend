@@ -1,5 +1,4 @@
 import { getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose'
-import { Inventory } from './inventoryModel'
 import { Trade } from './tradeModel'
 import { Document, Types } from 'mongoose'
 
@@ -10,6 +9,7 @@ export interface IUser extends Document {
   firstName: string
   lastName: string
   password: string
+  imageUrl?: string
   inventoryId?: string
   trades?: Ref<Trade>[]
 }
@@ -30,6 +30,9 @@ export class User {
   @prop({ required: true })
   public lastName!: string
 
+  @prop()
+  public imageUrl!: string
+
   @prop({ required: true })
   public password!: string
 
@@ -39,11 +42,11 @@ export class User {
   @prop({ default: '' })
   public inventoryId?: string
 
-  @prop({ ref: () => Trade })
-  public trades?: Ref<Trade>[]
+  @prop({ type: () => [String], default: [] })
+  public trades!: Ref<Trade>[]
 
   @prop({ default: 0 })
-  public money?: number
+  public money!: number
 }
 
 export const UserModel = getModelForClass(User)

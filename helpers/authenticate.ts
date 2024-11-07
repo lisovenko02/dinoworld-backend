@@ -27,7 +27,6 @@ const authenticate = async (
 
   try {
     const users = jwt.verify(token, ACCESS_KEY as string) as { id: string }
-    console.log(users)
     const user = await UserModel.findById(users.id).exec()
 
     if (!user || !user.token) {

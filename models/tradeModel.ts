@@ -6,23 +6,23 @@ import { Product } from './productModel'
 export class Trade {
   public _id?: string
 
-  //   @prop({ ref: () => User, required: true })
-  //   public initiator!: Ref<User>
+  @prop({ ref: () => 'User', required: true })
+  public initiator!: Ref<User>
 
-  //   @prop({ ref: () => User, required: true })
-  //   public receiver!: Ref<User>
+  @prop({ ref: () => 'User', required: true })
+  public receiver!: Ref<User>
 
-  //   @prop({ ref: () => Product, required: true })
-  //   public initiatorProducts!: Ref<Product>[]
+  @prop({ ref: () => 'Product', required: true })
+  public initiatorProducts!: Ref<Product>[]
 
-  //   @prop({ ref: () => Product, required: true })
-  //   public receiverProducts!: Ref<Product>[]
+  @prop({ ref: () => 'Product', required: true })
+  public receiverProducts!: Ref<Product>[]
 
-  //   @prop({ required: true, default: 'Pending' })
-  //   public status!: 'Pending' | 'Completed' | 'Canceled'
+  @prop({ default: 'Pending' })
+  public status!: 'Pending' | 'Completed' | 'Canceled'
 
-  @prop({ default: Date.now })
-  public tradeDate!: Date
+  @prop({ default: false })
+  public receiverConfirmed?: boolean
 }
 
 export const TradeModel = getModelForClass(Trade)

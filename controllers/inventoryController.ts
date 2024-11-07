@@ -9,7 +9,7 @@ import { UserModel } from '../models/userModel'
 export const addToInventory = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
     const { productId } = req.body
-
+    const { money, _id: userId } = req.user!
     if (!productId) {
       throw HttpError(400, 'Product ID is required')
     }
@@ -19,7 +19,11 @@ export const addToInventory = catchAsync(
       throw HttpError(404, 'Product not found')
     }
 
-    let inventory = await InventoryModel.findOne({ userId: req.user?._id })
+    if (money < product.price) {
+      throw HttpError(400, 'Not enough money to purchase this product')
+    }
+
+    let inventory = await InventoryModel.findOne({ userId })
     if (!inventory) {
       inventory = await InventoryModel.create({
         userId: req.user?._id,
@@ -32,7 +36,10 @@ export const addToInventory = catchAsync(
 
     await UserModel.findByIdAndUpdate(
       req.user?._id,
-      { $set: { inventoryId: inventory._id.toString() } },
+      {
+        $set: { inventoryId: inventory._id.toString() },
+        $inc: { money: -product.price },
+      },
       { new: true }
     )
 
@@ -72,10 +79,70 @@ export const getUserInventory = catchAsync(
     const paginatedItems = inventoryItems.slice(startIndex, endIndex)
 
     res.json({
+      userInfo: {
+        _id: user._id,
+        username: user.username,
+        imageUrl: user.imageUrl,
+      },
       totalItems: inventoryItems.length,
       currentPage: pageNumber,
       totalPages: Math.ceil(inventoryItems.length / limitNumber),
       items: paginatedItems,
+    })
+  }
+)
+
+export const getTradersInventories = catchAsync(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { _id: initiatorId } = req.user!
+    const { id: receiverId } = req.params
+
+    if (!receiverId || receiverId.length !== 24) {
+      throw HttpError(400, 'Invalid receiver ID')
+    }
+
+    // Отримуємо інвентарі з даними про користувачів
+    const inventories = await InventoryModel.find({
+      $or: [{ userId: initiatorId }, { userId: receiverId }],
+    }).populate('userId', 'username _id imageUrl') // Витягуємо username, _id і imageUrl
+
+    if (inventories.length !== 2) {
+      throw HttpError(404, 'One or both inventories not found')
+    }
+
+    const initiatorInventory = inventories.find(
+      (inventory) => inventory.userId._id.toString() === initiatorId.toString()
+    )
+    const receiverInventory = inventories.find(
+      (inventory) => inventory.userId._id.toString() === receiverId
+    )
+
+    if (!initiatorInventory || !receiverInventory) {
+      throw HttpError(404, 'One or both inventories not found')
+    }
+
+    const initiatorProducts = await Promise.all(
+      initiatorInventory.userProducts.map((productId) =>
+        ProductModel.findById(productId)
+      )
+    )
+
+    const receiverProducts = await Promise.all(
+      receiverInventory.userProducts.map((productId) =>
+        ProductModel.findById(productId)
+      )
+    )
+
+    // Відправляємо дані про продукти і користувачів
+    res.json({
+      initiator: {
+        products: initiatorProducts,
+        user: initiatorInventory.userId, // Дані про ініціатора
+      },
+      receiver: {
+        products: receiverProducts,
+        user: receiverInventory.userId, // Дані про отримувача
+      },
     })
   }
 )

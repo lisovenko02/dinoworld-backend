@@ -5,13 +5,13 @@ import { sampleProducts } from '../data'
 
 const seedRouter = express.Router()
 
-// seedRouter.get(
-//   '/',
-//   catchAsync(async (req: Request, res: Response) => {
-//     // await ProductModel.deleteMany({})
-//     // const createdProducts = await ProductModel.insertMany(sampleProducts)
-//     res.json({ 'hello' })
-//   })
-// )
+seedRouter.get(
+  '/'
+  //   catchAsync(async (req: Request, res: Response) => {
+  //     await ProductModel.deleteMany({})
+  //     const createdProducts = await ProductModel.insertMany(sampleProducts)
+  //     res.json(createdProducts)
+  //   })
+)
 
 export default seedRouter

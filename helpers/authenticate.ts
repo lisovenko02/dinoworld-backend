@@ -11,6 +11,7 @@ const { ACCESS_KEY } = process.env
 
 export interface AuthenticatedRequest extends Request {
   user?: InstanceType<typeof User> | null
+  file?: Express.Multer.File
 }
 
 const authenticate = async (

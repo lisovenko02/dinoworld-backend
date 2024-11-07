@@ -101,17 +101,16 @@ export const getTradersInventories = catchAsync(
       throw HttpError(400, 'Invalid receiver ID')
     }
 
-    // Отримуємо інвентарі з даними про користувачів
     const inventories = await InventoryModel.find({
       $or: [{ userId: initiatorId }, { userId: receiverId }],
-    }).populate('userId', 'username _id imageUrl') // Витягуємо username, _id і imageUrl
+    }).populate('userId', 'username _id imageUrl')
 
     if (inventories.length !== 2) {
       throw HttpError(404, 'One or both inventories not found')
     }
 
     const initiatorInventory = inventories.find(
-      (inventory) => inventory.userId._id.toString() === initiatorId.toString()
+      (inventory) => inventory.userId._id.toString() === initiatorId?.toString()
     )
     const receiverInventory = inventories.find(
       (inventory) => inventory.userId._id.toString() === receiverId
@@ -133,15 +132,14 @@ export const getTradersInventories = catchAsync(
       )
     )
 
-    // Відправляємо дані про продукти і користувачів
     res.json({
       initiator: {
         products: initiatorProducts,
-        user: initiatorInventory.userId, // Дані про ініціатора
+        user: initiatorInventory.userId,
       },
       receiver: {
         products: receiverProducts,
-        user: receiverInventory.userId, // Дані про отримувача
+        user: receiverInventory.userId,
       },
     })
   }

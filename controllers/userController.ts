@@ -202,7 +202,10 @@ export const editUser = catchAsync(
     if (req.file) {
       const { file } = req
 
-      const { error, key } = await uploadToS3({ file, userId })
+      const { error, key } = await uploadToS3({
+        file,
+        userId: userId!.toString(),
+      })
 
       if (error) {
         const message =

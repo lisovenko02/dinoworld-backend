@@ -208,6 +208,7 @@ export const editUser = catchAsync(
       })
 
       if (error) {
+        console.log(error)
         const message =
           typeof error === 'object' && error !== null && 'message' in error
             ? (error as Error).message

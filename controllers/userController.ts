@@ -56,9 +56,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 
 export const signIn = catchAsync(async (req: Request, res: Response) => {
   const { email, username, password } = req.body
-  console.log('email', email)
-  console.log('username', username)
-  console.log('password', password)
+
   const user = await UserModel.findOne({
     $or: [{ email }, { username }],
   })
@@ -208,7 +206,6 @@ export const editUser = catchAsync(
       })
 
       if (error) {
-        console.log(error)
         const message =
           typeof error === 'object' && error !== null && 'message' in error
             ? (error as Error).message

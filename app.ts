@@ -3,11 +3,9 @@ import express, { NextFunction, Request, Response } from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import productRouter from './routes/productRouter'
-import seedRouter from './routes/seedRouter'
 import usersRouter from './routes/userRouter'
 import inventoryRouter from './routes/inventoryRouter'
 import tradeRouter from './routes/tradeRouter'
-import path from 'path'
 
 dotenv.config()
 
@@ -18,7 +16,6 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/products', productRouter)
-app.use('/seed', seedRouter)
 app.use('/user', usersRouter)
 app.use('/inventory', inventoryRouter)
 app.use('/trade', tradeRouter)

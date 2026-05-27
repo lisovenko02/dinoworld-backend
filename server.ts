@@ -7,7 +7,6 @@ if (!DB_HOST) {
   console.error('DB_HOST is not defined')
   process.exit(1)
 }
-
 mongoose.set('strictQuery', true)
 
 mongoose
@@ -17,5 +16,5 @@ mongoose
     console.log('Database connection successful')
   })
   .catch((error) =>
-    console.error('Error connecting to MongoDB:', error.message)
+    console.error('Error connecting to MongoDB:', error.message),
   )

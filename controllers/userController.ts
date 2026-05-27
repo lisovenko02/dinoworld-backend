@@ -9,7 +9,7 @@ import { AuthenticatedRequest } from '../helpers/authenticate'
 import { HydratedDocument } from 'mongoose'
 import { InventoryModel } from '../models/inventoryModel'
 import { ProductModel } from '../models/productModel'
-import { uploadToS3 } from '../helpers/s3'
+import { uploadToStorage } from '../helpers/supabase'
 
 dotenv.config()
 
@@ -94,7 +94,7 @@ export const getCurrentUser = catchAsync(
     delete userWithoutPassword.password
 
     res.json(userWithoutPassword)
-  }
+  },
 )
 
 export const getUsers = catchAsync(async (req: Request, res: Response) => {
@@ -142,7 +142,7 @@ export const depositToAccount = catchAsync(
     const updatedUser = await UserModel.findByIdAndUpdate(
       user._id,
       { $inc: { money: deposit } },
-      { new: true }
+      { new: true },
     )
     if (!updatedUser) {
       throw HttpError(404, 'User not found')
@@ -151,7 +151,7 @@ export const depositToAccount = catchAsync(
     res.json({
       message: `You successfully deposit to your account, now your balance:${updatedUser.money?.toLocaleString()}$`,
     })
-  }
+  },
 )
 
 export const getUserProfileById = catchAsync(
@@ -173,7 +173,7 @@ export const getUserProfileById = catchAsync(
     const inventoryItems = await Promise.all(
       inventory?.userProducts.map((product) => {
         return ProductModel.findById(product)
-      })
+      }),
     )
     res.json({
       _id: user?._id,
@@ -185,7 +185,7 @@ export const getUserProfileById = catchAsync(
       trades: user?.trades,
       inventory: inventoryItems,
     })
-  }
+  },
 )
 
 export const editUser = catchAsync(
@@ -200,7 +200,7 @@ export const editUser = catchAsync(
     if (req.file) {
       const { file } = req
 
-      const { error, key } = await uploadToS3({
+      const { error, url } = await uploadToStorage({
         file,
         userId: userId!.toString(),
       })
@@ -213,7 +213,7 @@ export const editUser = catchAsync(
         throw HttpError(500, message)
       }
 
-      imgKey = key
+      imgKey = url
     }
 
     if (!user) {
@@ -239,11 +239,9 @@ export const editUser = catchAsync(
         firstName,
         lastName,
         password: hashPassword,
-        imageUrl:
-          imgKey &&
-          `https://${process.env.BUCKET}.s3.eu-north-1.amazonaws.com/${imgKey}`,
+        imageUrl: imgKey,
       },
-      { new: true }
+      { new: true },
     )
 
     if (!updatedUser) {
@@ -251,7 +249,7 @@ export const editUser = catchAsync(
     }
 
     res.json(updatedUser)
-  }
+  },
 )
 
 export const logout = catchAsync(
@@ -261,5 +259,5 @@ export const logout = catchAsync(
     await UserModel.findByIdAndUpdate(_id, { token: '' }, { new: true })
 
     res.status(204).json()
-  }
+  },
 )
